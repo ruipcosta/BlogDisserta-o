@@ -53,101 +53,35 @@
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/homepag.jpg')">
+  <header class="masthead" style="background-image: url('img/erros.png')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="site-heading">
-            <h1>Master Thesis Blog</h1>
-            <span class="subheading">Deteção e seguimento de alvos múltiplos usando LIDAR e obstáculos de velocidade para definição em tempo real das zonas de colisão </span>
+          <div class="post-heading">
+            <h1>Week #4 2/03 - 6/03 </h1>
+            <h2 class="subheading">LAR meeting, code review, GNN </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on March 6, 2020</span>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <div class="container">
-    <!-- SEMANA 1/2 -->
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="post-preview">
-          <a href="sem1.html">
-            <h2 class="post-title">
-              Week #1-2 10/02 - 21/02 
-            </h2>
-            <h3 class="post-subtitle">
-              First weeks of my new adventure
-            </h3>
-          </a>
-        </div>
-        
-        <!-- Pager 
-        <div class="clearfix">
-          <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-        </div> -->
-      </div>
-    </div>
-    <!-- SEMANA 3 -->
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="post-preview">
-          <a href="sem3.html">
-            <h2 class="post-title">
-              Week #3 24/02 - 28/02
-            </h2>
-            <h3 class="post-subtitle">
-              Preliminary Report, ROS workshop, and some compiling
-            </h3>
-          </a>
-        </div>
-        
-        <!-- Pager 
-        <div class="clearfix">
-          <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-        </div> -->
-      </div>
-      <!-- SEMANA 4 -->
+  <!-- Post Content -->
+  <article>
+    <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-preview">
-            <a href="sem4.html">
-              <h2 class="post-title">
-                Week #4 2/03 - 6/03
-              </h2>
-              <h3 class="post-subtitle">
-                LAR meeting, code review, GNN
-              </h3>
-            </a>
-          </div>
-          
-          <!-- Pager 
-          <div class="clearfix">
-            <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-          </div> -->
-          <!-- SEMANA 5  -->
+          <p>This week i started observing the code for the mtt package. In my meeting last Friday with professor Jorge Almeida, the developer of mtt, he explained that there were a lot of code files within the package that were not necessary. So, i removed some of these files and in the end i ended up with 5 code files essential for the mtt program. </p>
+          <p>After this, he told me about the gnn, a mtt related program that according to him gets better results tracking the obstacles. So i implemented it and got it running. I also started reading more about it to understand it better, but by now it seems quite simmilar to the mtt, but it publishes a target list message with relevant information about the detections made, such as it's velocity, position, etc. Information that the mtt did not published.</p>
+          <p>On Friday we had the LAR meeting. It's a meeting with everyone working in lab to present the work we've been doing. It was very interesting to understand the work that my colleagues are doing, and to explain to them what I have been doing</p>
         </div>
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="post-preview">
-              <a href="sem5.html">
-                <h2 class="post-title">
-                  Week #5 9/03 - 13/03
-                </h2>
-                <h3 class="post-subtitle">
-                  More GNN and some demos
-                </h3>
-              </a>
-            </div>
-            
-            <!-- Pager 
-            <div class="clearfix">
-              <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-            </div> -->
-          </div>
+      </div>
     </div>
-  </div>
+  </article>
 
   <hr>
 

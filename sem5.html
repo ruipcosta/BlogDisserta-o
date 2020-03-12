@@ -53,101 +53,35 @@
   </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('img/homepag.jpg')">
+  <header class="masthead" style="background-image: url('img/erros.png')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="site-heading">
-            <h1>Master Thesis Blog</h1>
-            <span class="subheading">Deteção e seguimento de alvos múltiplos usando LIDAR e obstáculos de velocidade para definição em tempo real das zonas de colisão </span>
+          <div class="post-heading">
+            <h1>Week #5 9/03 - 13/03 </h1>
+            <h2 class="subheading">More GNN and some demos </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on March 12, 2020</span>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <div class="container">
-    <!-- SEMANA 1/2 -->
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="post-preview">
-          <a href="sem1.html">
-            <h2 class="post-title">
-              Week #1-2 10/02 - 21/02 
-            </h2>
-            <h3 class="post-subtitle">
-              First weeks of my new adventure
-            </h3>
-          </a>
-        </div>
-        
-        <!-- Pager 
-        <div class="clearfix">
-          <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-        </div> -->
-      </div>
-    </div>
-    <!-- SEMANA 3 -->
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="post-preview">
-          <a href="sem3.html">
-            <h2 class="post-title">
-              Week #3 24/02 - 28/02
-            </h2>
-            <h3 class="post-subtitle">
-              Preliminary Report, ROS workshop, and some compiling
-            </h3>
-          </a>
-        </div>
-        
-        <!-- Pager 
-        <div class="clearfix">
-          <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-        </div> -->
-      </div>
-      <!-- SEMANA 4 -->
+  <!-- Post Content -->
+  <article>
+    <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-preview">
-            <a href="sem4.html">
-              <h2 class="post-title">
-                Week #4 2/03 - 6/03
-              </h2>
-              <h3 class="post-subtitle">
-                LAR meeting, code review, GNN
-              </h3>
-            </a>
-          </div>
-          
-          <!-- Pager 
-          <div class="clearfix">
-            <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-          </div> -->
-          <!-- SEMANA 5  -->
+          <p>This week i've put MTT aside and started working more on GNN. Althoug the target representantion made by MTT appeared to be more accurate, especialy for bigger obstacles, the GNN publishes more important information, so i decided to get a better understanding of his code.</p>
+          <p>As a request by professor Jorge Almeida I added information published by the node, such as morphologic information of the targets. Since for the Velocity Obscatles I will need to approximate the target to a circle I added the radius of the obstacle detected to the message published by the GNN, and made a visual representantion of such on Rviz.  </p>
+          <p>Since the amount of targets detected by the GNN node is so massive, I started working on a demo to better represent the Velocity Obstacle. I'm working on representing a circle on Rviz moving from point A to point B, and then I will try to add another circle so they can switch places without colliding, while representing the Velocity Cone in the process. It's quite tricky to do so, since I have to implement a sence of velocity to the circle, and I haven't figured it out how to do it yet. </p>
         </div>
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="post-preview">
-              <a href="sem5.html">
-                <h2 class="post-title">
-                  Week #5 9/03 - 13/03
-                </h2>
-                <h3 class="post-subtitle">
-                  More GNN and some demos
-                </h3>
-              </a>
-            </div>
-            
-            <!-- Pager 
-            <div class="clearfix">
-              <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-            </div> -->
-          </div>
+      </div>
     </div>
-  </div>
+  </article>
 
   <hr>
 
