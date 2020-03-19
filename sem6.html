@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Rui Costa - Master Thesis 2020</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Rui Costa</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://lars.mec.ua.pt/">LAR UA</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/sem6.png')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Week #6 16/03 - 20/03 </h1>
+            <h2 class="subheading">Marker display and reducing targets </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on March 19, 2020</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>This week I continued working in the GNN code, to try to reduce the amount of targets displayed. In short the GNN code subscribes to PointCloud2 data published by some other node, and every time it receives new data first puts all this information in a vector. This data vector is then clustered, to do this we go through all the points in the vector and if it's not yet associated with a current target, the associacion is made. So in the end of the clustering process we get the current targets. Then we proceed to associate all the current targets to the list of active targets we get form previous iteration. This association is made by an Hungarian Algorithm or munkers algorithm and basically it uses a cost matrix to determine the best match between a current target and an active target, getting in the end an updated list of active targets. After this the step models and search areas are updated, and in the end the markers are created.    </p>
+          <p>The GNN node launch file created by Jorge Almeida initializes firstly the simple planar pc generator, and then the GNN node itself. The only purpose of the simple planar pc generator is to transform laserscan data to pointcloud2 data, to then be used by the GNN node. I'm still trying to figure out why this is done, and why the GNN uses pointcloud2 instead of laserscan data. I've dug around this topic in the internet and stil haven't found the main difference between them. However I've found some PointCloud2 tutorials that I hope will enlighten me on this matter.</p>
+          <p>Another problem I've found is that the targets seemed to appear and disappear in a few areas represented in Rvizz, and after some digging around I traced back the problem to the simple planar pc generator node. This node uses data from the left and/or the right laser scan data, deppending on the used launch settings, to produce the point cloud. However if we set the settings to use only one of laserscan data for example the left side, we would get some brief flashes of the right side lasercan data, inducing the GNN node to search for targets in this area. Doing some minor changes to the code, this problem was then fixed, reducing in some cases the number of detected targets.</p>
+          <p>In my view, the major problem with GNN is the enoumous ammount of displayed targets with a few of these just representing just the point cloud noise, since some targets would only be represented with less than 2 points. So in order to fix this issue I dedicated most of my time on reviewing the code and trying to alter it without compromising too much the original. After implementing that target should have more than 10 points, I could only reduced the amount of target by 5, so visually the diference wasn't too noticeable. I need to continue to work on this, maybe next time implementing a distance maximum, but since the laserscan maximum range was 20 meters this distance number need to be evaluated.</p>
+          <p>After introducing a circle around the target last week, I continued to improve the target caracterization by adding a line between every point of the target so that I can see which point belongs to wich target. This implementation works really well on static and well defined objects, but for a group of points with no visual order the lines can get quite crazy going from one point to another. Nevertheless this representation was also good because it needed two points form the target to do a line, so if the target didn't have this many points it would produce an error meaning that our reduction method before wasn't working.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/ruiplccosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/ruipcosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Rui Costa 2019</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
