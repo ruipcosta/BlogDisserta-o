@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Rui Costa - Master Thesis 2020</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Rui Costa</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://lars.mec.ua.pt/">LAR UA</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/velocitycircle.png')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Week #7 23/03 - 27/03 </h1>
+            <h2 class="subheading">Target reducion, Velocity Cone </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on March 26, 2020</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>Last week I worked on reducing the number of targets detected by the GNN, and even though the number of targets were reduced I knew I could improve it even further, so I started this week continuing to work on this issue. 
+           In my first attempt I reduced the number of targets by removing them from the initial list of objects detected, if it's number of points was less than 5, however by doing this I was removing information about the detection part of the code, and not the association part.
+           So I decided it was best to keep the information of all the detected objects, but only associate that object to a target if it met the requirements.
+           I also made these requirements more easy to set and tweak, by instead of hard coding them (setting them directly into the source code), specify them in the GNN parameters yaml page. This yaml page was already used by the GNN code to specify some parameters such as the clustering distance (maximum distance between two consecutive points of the same target), the maximum missing iterations, etc.
+           Before I only specified the minimum number of points of the target, but this would mean that an object could have a lot of points but still be very small and not a major risk for the car. So I added a minimum size of an object to be considered a target.</p>
+          <p>With the reduced amount of targets displayed on Rviz, the screen was much cleaner and allowed me to detect that the line representation of the targets was not following the points, meaning that the information about these points was not being updated by the GNN. This was a real issue because if this information was not up to date, the initialpose and finalpose data published by the GNN wasn't either and the velocity obstacle code wasn't correct as well.
+             So I needed to fix this issue in order to continue on with my work. After this issue being fixed I noticed a smaller decrease on the program performance while running, wich was expected, that got me worried about the possible bottleneck when running the code while the sensor is moving, due to the rapid change of the targets position.</p>
+             <div class="row">
+              <div class="column">
+                <figure>
+                  <img src="gnnreducedtargets.png" alt="Reduced Targets" style="width:100%">
+                  <figcaption>Fig.1 - Reduced Number of targets.</figcaption>
+                </figure> 
+              </div>
+              <div class="column">
+                <img src="gnnbug.png" alt="Line bug" style="width:100%">
+                <figcaption>Fig.2 - GNN line bug</figcaption>
+              </div>
+            </div> 
+          <p>The velocity cone representation was the big objective for this week, so after finishing the GNN problems I started working on the VO python code. I already had the circle representation in the GNN code but I decided it was best to do this in the VO code, since I don't see how usefull it is for the GNN, I also transfered the radius calculation to VO for the same reasons.
+             To do the Velocity Cone I first need to approximate the target to a circle, and this is was already my first issue. I initially thought about setting the circle radius as the distance between the last (or first) point and the center of the target, wich is given by the GNN. However this solution resulted in some issues, mainly because the center point given by the GNN is the predicted center point of the target, wich moves quite a bit, and when the target can't find it's object he starts woundering around looking for it and the circle keeps increasing resulting in wrong information.
+             Then I set the diameter of the circle as the distance between the first and the last point of the target, but still centering the circle in the center point given by the GNN. I'm currently using this option but I'm still woundering if it's the best solution. I've done a lot of research on this matter, but I've only found articles realted to 3D objects and since I'm only working with mainly 2D lines this approximation is very difficult to grasp. I wounder if I calculate the target's convex hull area I can equalize it to the area of a circle and retrieve it's radius, being that the target is not a line. I need to done some more research.</p>
+          <p>After representing the target by a circle I then need to add the ATLASCAR's approximated circle radius to the target's radius, and this is were things got worse. I calculated the ATLASCAR radius using the distance from its center to one of its vertices but when adding this to the targets radiuses the target's velocity circle fill the entire RViz, wich means that there's no way that the ATLASCAR can move without coliding. Since this bagfile was not made by me, I can't confirm that this is true but it sure points out that something is wrong, probably with the circle approximation.</p>
+          
+        
+          <figure>
+            <img src="velocitycircle.png" alt="Velocity circle" style="width:100%">
+            <figcaption>Fig.3 - Velocity Circle with reduced targets.</figcaption>
+          </figure>
+          <p>This week was very important to see the issues I'm going to face in the final stretch of this Thesis, and it finally allowed me to see clearly the usage of Velocity obstacles. Now I need to dig deeper in the research to find an answer to the approximation circle issue. It showed me as well how important it is to refine the data as we can see in the difference between the two velocity circle images</p>
+
+          <figure>
+            <img src="gnnunfiltered.png" alt="Velocity circle" style="width:100%">
+            <figcaption>Fig.4 - Velocity Circle unfiltered targets.</figcaption>
+          </figure>
+             
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/ruiplccosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/ruipcosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Rui Costa 2019</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
