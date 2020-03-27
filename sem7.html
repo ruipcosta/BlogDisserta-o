@@ -97,7 +97,15 @@
           <p>The velocity cone representation was the big objective for this week, so after finishing the GNN problems I started working on the VO python code. I already had the circle representation in the GNN code but I decided it was best to do this in the VO code, since I don't see how usefull it is for the GNN, I also transfered the radius calculation to VO for the same reasons.
              To do the Velocity Cone I first need to approximate the target to a circle, and this is was already my first issue. I initially thought about setting the circle radius as the distance between the last (or first) point and the center of the target, wich is given by the GNN. However this solution resulted in some issues, mainly because the center point given by the GNN is the predicted center point of the target, wich moves quite a bit, and when the target can't find it's object he starts woundering around looking for it and the circle keeps increasing resulting in wrong information.
              Then I set the diameter of the circle as the distance between the first and the last point of the target, but still centering the circle in the center point given by the GNN. I'm currently using this option but I'm still woundering if it's the best solution. I've done a lot of research on this matter, but I've only found articles realted to 3D objects and since I'm only working with mainly 2D lines this approximation is very difficult to grasp. I wounder if I calculate the target's convex hull area I can equalize it to the area of a circle and retrieve it's radius, being that the target is not a line. I need to done some more research.</p>
-          <p>After representing the target by a circle I then need to add the ATLASCAR's approximated circle radius to the target's radius, and this is were things got worse. I calculated the ATLASCAR radius using the distance from its center to one of its vertices but when adding this to the targets radiuses the target's velocity circle fill the entire RViz, wich means that there's no way that the ATLASCAR can move without coliding. Since this bagfile was not made by me, I can't confirm that this is true but it sure points out that something is wrong, probably with the circle approximation.</p>
+          
+          <video width="320" height="240" controls>
+            <source src="gnnradiusbu.mp4" type="video/mp4">
+            <source src="movie.ogg" type="video/ogg">
+            Your browser does not support the video tag.
+          </video> 
+          
+          
+             <p>After representing the target by a circle I then need to add the ATLASCAR's approximated circle radius to the target's radius, and this is were things got worse. I calculated the ATLASCAR radius using the distance from its center to one of its vertices but when adding this to the targets radiuses the target's velocity circle fill the entire RViz, wich means that there's no way that the ATLASCAR can move without coliding. Since this bagfile was not made by me, I can't confirm that this is true but it sure points out that something is wrong, probably with the circle approximation.</p>
           
         
           <figure>
