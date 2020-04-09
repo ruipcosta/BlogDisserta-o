@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <style>
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+  <title>Rui Costa - Master Thesis 2020</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Rui Costa</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://lars.mec.ua.pt/">LAR UA</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/rosbagerror.png')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Week #9 06/04 - 10/04 </h1>
+            <h2 class="subheading">Moving targets, code analysis </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on April 9, 2020</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p align="justify"> This week's work was focused on establishing the first version of the final VO node. By the end of last week I already had the basis of the code, however some details were needed in order to implement the collision calculations, being the most important one the velocity of the targets.
+             Eventhough I had previously calculated the absolute velocity cone, in the weekly meeting with Professor Vitor Santos we came to the conclusion that it might not be the best solution to this problem. I realised that I was heading in the wrong direction, thinking that the velocity that I have from the GNN was the target's true velocity, wich I could then use to calculate the relative velocity between the Atlascar and the target itself. The fact is that the velocity given by the GNN node is already the relative velocity between the target and the Atlascar, since the data is measured by the LIDAR wich is in fact in the Atlascar.
+              This made the calculations easier, since I could use this velocity and just multiply it by -1 to get the relative velocity between the Atlascar and the target. It is important to notice the difference between the pairs target/Atlascar and Atlascar/target, since though the velocity modules are the same, the direction is not. Using this relative velocity also means that I don't need the velocity of the Atlascar itself. </p>
+          
+          <p align="justify"> Given the relative velocity explained above, and discarding the absolute collision cone made last week, I now have all the parameters needed to calculate if the target is in collision course. To do this I only need the angles of the two tangent lines to the circle, and the angle of the relative velocity vector. If this last angle value is between the tangent lines angle, the Atlascar is in collision course to that specific target.
+          With the collision course calculation I created the "collisions" topic, an array of "collision" messages composed by the time stamp, the target wich is colliding to, a bool variable defining if there will be a collision, the time to collision, and the distance to collision. The time to collision was calculated by dividing the distance to the target centroid by the velocity module of the target. This calculation might not be the most adequate one, since some of the target's point can be closer to the car than the centroid, meaning that I will have to add more information provided by the GNN to take into account this scenario.</p>
+          
+          <p align="justify">One of the biggest accomplishments this week, was finally using the bagfiles taken last week. With the help of Professor Miguel Oliveira, we concluded that in fact the bagfile was corrupted, so I asked my colleague Diogo to send me the bagfiles that were still saved on the Altas machine. With these bagfiles I can now study the behaviour of both the GNN and VO nodes with Atlascar moving. </p>
+          <video width="320" height="240" controls>
+            <source src="img/movingbag.mp4" type="video/mp4">
+          </video> 
+          <p align="justify"> While testing the nodes with bagfile shown above, I could confirm some of my bottleneck fears mencioned in the past weeks. Due to the huge ammount of data captured by the LIDAR's and the high 50hz publish rate, the nodes can't keep up with the information. While simply displaying the targets with the GNN, the delay isn't that much noticeable, however while displaying the velocity cone the data is so delayed that if I pause the bagfile the information keeps flowing for at least a minute or so. To get a better sense of this delay I made a few tests. First I looked up the publish rate of every topic that the data goes through. I know that the lasers publish at 50 hz, after going through the simple_planar_pc_generator the node publishes at approximatly 37 Hz, then the GNN targets topic is pusblished at 15 Hz, and in the end the velocity cone representation is published at 4 Hz.
+            As we can see the publish rate in the end is up to ten times slower than the original data. It is important to point out that this delay is only on the representation side of the node, and the Collison topic is published at an approximate rate of it's precedent, the targets topic.  </p>
+          
+          <p align="justify">To find out more about this matter I did more tests on the VO node to determine how slow was the node itself. I did three experiments, timming the execution of the node everytime it received data by the targets topic and in the end making it's average time of running. In the first one, I only computed the collison topic and its calculations, without the markers, and it averaged at about 0.0496 seconds of running time. In the second one I added the markers, and it got 0.2585 seconds. And in the third I added the collor to the markers but the time was very close to the second experiment. I can now conclude that just by making the markers it added about 0.2 seconds to the running time of the code, that in my opinion is due to the cleaning function wich deletes all the markers that are not needed. </p>
+          
+          <p align="justify">So in order to keep the representation part of the node I had to reduce the ammount of it. I decided to only represent the velocity cones of the imminent collision targets, that is if the time to collision is less than 10 seconds. The publish rates were not measured yet but I can clearly see on Rviz the improvements. Eventhough it's not perfect, as we see in the video below when the car stops, it's much better and the delay is not as much noticeable </p>
+          <video width="320" height="240" controls>
+            <source src="img/vo.mp4" type="video/mp4">
+          </video>
+
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/ruiplccosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/ruipcosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Rui Costa 2019</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
