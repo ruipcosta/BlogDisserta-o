@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <style>
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+  <title>Rui Costa - Master Thesis 2020</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Rui Costa</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://lars.mec.ua.pt/">LAR UA</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/onestep.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Week #10 13/04 - 17/04 </h1>
+            <h2 class="subheading">Code optimization, velocity revision </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on April 16, 2020</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p align="justify"> This week I did a revision of VO node code to try to improve the running times of last week. This is a hard process but if we intend to use this program to detect collision in real time it is needed, since we need the result promptly and the delay mentioned before can put the Atlascar in risk of collision. I altered a few things in the code, related to the markers and the collision topic to improve the code. In the end I did another few tests to determine how the node behaves. I realised that, as expected the code starts to bottleneck when the number of targets is higher than approximatly 24. The code takes an average of 0.01 seconds to process each target's calculations and after a few tweaks it took an average of 0.137 seconds while displaying all the markers. With the marker display restrition metioned last week it took an average of 0.04 seconds. Althoug these numbers seem good, performance wise, they relate to the average running time and when a higher number of markers are needed to be displayed the code runs really slow and then it can't keep up. It is important to notice that these numbers are related to this specific bagfile and it may not be a good representation in other cases where multiple targets can be detected. There are too many factors that may cause even more delays in the code, such as speed of the Atlascar and/or its surronding objects, LIDAR range, surronding enviornment, and more. Afterall this was just a beta test of the code performance and in the future many more test will be needed.</p>
+          <p align="justify"> I also took in consideration the case mentioned last week where some of the targets' points could be closer to the Atlascar than it's centroid. So to counter this I added to the Target message topic, published by the GNN, the minimum distance of each detected target. I also calcuted the maximum distance and the maximum and minimum angle of the points of each target, however I didn't include them in the message topic since I am not needing them now.</p>
+          <p align="justify"> After an email exchange with Professor Jorge Almeida, he alerted me about some possible errors in the velocity information published by the GNN related to the Atlascar egomotion. This was unexpected and made me rethink the velocity aspect of VO node, since it heavely depends on this information. He stated that due to the Atlascar egomotion the target's velocity will be affected with a false sense of movement that would cause false information. Luckily he already did some work in this subject and I found some of his packages in the lar toolkit so I started looking into his code to try to understand how can I use in my work. My fears of code bottleneck started to appear again, since by adding another node to the project it can reduced performance even further.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/ruiplccosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/ruipcosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Rui Costa 2019</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
