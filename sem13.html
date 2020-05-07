@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <style>
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+  <title>Rui Costa - Master Thesis 2020</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Rui Costa</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://lars.mec.ua.pt/">LAR UA</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/onestep.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Week #13 04/05 - 08/05 </h1>
+            <h2 class="subheading"> Dissertation writing, velocity data analysis, resource monitoring   </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on May 7, 2020</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p align="justify"> Although this week's main focus was to write the first chapters of the disseration, some data analysis was made for both the velocity verification and also the cpu and memory resources.</p>
+          <p align="justify"> In the begining of the week I went again to Aveiro to collect more data, this time trying as best we could to start at the same time both recordings for the laser data and Diogo's velocity and steering wheel angle data. Since Diogo's package is not in the Atlas machine, and we don't have a way to download it, the best way to match the timing of the bagfiles is to start them at the same time. Being that the data is in two bagfiles, we will have issues when we playback them since there will always be a delay between the two, even with a bagfile merge, due to human reaction times. However with this temporary solution it is possible to get an approximation and after timming the bagfiles as best as I could the results were as follows.</p>
+          <video width="800" height="600" controls>
+            <source src="img/functioningnfp.mp4" type="video/mp4">
+          </video> 
+                    
+          <p align="justify"> After timming the bagfiles I started analysing the data. In Fig.1 we can see on the top left terminal the target's information (id, distance to the car, velocity) published by the GNN node. We can also see, for the same target, the calculations explained last week on the top right terminal (distance: distance from the target to the car's turning center; targetangvel: target's angular velocity; dist: car's turning center radius; carangvel: car's angular velocity). The car's current velocity and steering wheel angle is also depicted on the bottom terminal. All the distances are in meters, the velocity in km/h and the angular velocities in degrees/scan. Most of these units are not in S.I unit system, so some conversions must be made in the following calculations.</p>
+          <figure>
+            <img src="img/velocitytest.png" alt="schematics2" style="width:70%" >
+            <figcaption>Fig.1 - Data analysis of the car and target's velocities</figcaption>
+          </figure>
+          <figure>
+            <img src="img/wall.jpg" alt="schematics2" style="width:70%" >
+            <figcaption>Fig.2 - Approximate depicted scenario</figcaption>
+          </figure>
+        
+          <p align="justify"> The target in question (id: 194) is a wall (Fig.2), so we know for a fact that it can't move. With that said the velocity given by the GNN should simmiliar to the actual velocity of the ATLASCAR, however as we can see it is not (GNN velocity = 13 km/h; Car velocity = 4 km/h). With distance and angular velocities calculations made and displayed on the right side terminal we can determine the approximate velocity of both the car and the target using $v= \omega * r$ being $\omega$ the angular velocity, $v$ the linear velocity and $r$ the distance. Whith this equation and remembering to convert the displayed angular velocity to rad/scan, we get the same linear velocity of approximatly 4km/h for both the car and the target. Bare in mind that these velocities are tangential velocities while rotating around the car's turning center, and for a moving target this principle does not theor apply since it's not rotating around the same point as the car. Further tests must me made to determine if in fact for a moving target the results differ.    </p>
+          <p align="justify"> After studying these results we can conclude that it is possible to determine if a target is in fact static by calculating it's angular velocity. </p>
+          <p align="justify"> In order to get an ideia of how expensive runing all these nodes are, performance wise, a resource monitoring tool was used. The results are show on Fig.3 </p>
+          <figure>
+            <img src="img/resource_monitor_full.png" alt="schematics2" style="width:70%" >
+            <figcaption>Fig.3 - Resource monitoring while all needed nodes running</figcaption>
+          </figure>
+          <p align="justify"> In the image we can see the two python nodes (the first one is the short term path node with 0.4% total memory used and the seconde one is VO node with 6.1% total memory used), the gnn node aswell as the simple planar pc generator. On the third row of the image is displayed the cpu usage as a percentage by the user of 47.3% wich means approximatly only 50% of the cpu capabality is used. These values seem acceptable in this stage, however I was able to detect that the VO node memory usage kept climbing (currently at 6.1%) while the number of targets increases (at the time the number of targets was about 1700). This means that if the node ran indefinitly, it will eventually run out of memory, crashing the computer. This was due to the fact that the node records every single target data and keeps it in memory. This rather basic resource monitoring was essencial to realize that the code needs to be once again reviewed to correct such issues.</p>
+          
+
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/ruiplccosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/ruipcosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Rui Costa 2019</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+  
+
+</body>
+
+</html>
