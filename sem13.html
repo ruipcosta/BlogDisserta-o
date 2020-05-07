@@ -105,7 +105,7 @@
                     
           <p align="justify"> After timming the bagfiles I started analysing the data. In Fig.1 we can see on the top left terminal the target's information (id, distance to the car, velocity) published by the GNN node. We can also see, for the same target, the calculations explained last week on the top right terminal (distance: distance from the target to the car's turning center; targetangvel: target's angular velocity; dist: car's turning center radius; carangvel: car's angular velocity). The car's current velocity and steering wheel angle is also depicted on the bottom terminal. All the distances are in meters, the velocity in km/h and the angular velocities in degrees/scan. Most of these units are not in S.I unit system, so some conversions must be made in the following calculations.</p>
           <figure>
-            <img src="img/velocitytest.png" alt="schematics2" style="width:70%" >
+            <img src="img/velocitytest.png" alt="schematics2" style="width:100%" >
             <figcaption>Fig.1 - Data analysis of the car and target's velocities</figcaption>
           </figure>
           <figure>
@@ -117,11 +117,11 @@
           <p align="justify"> After studying these results we can conclude that it is possible to determine if a target is in fact static by calculating it's angular velocity. </p>
           <p align="justify"> In order to get an ideia of how expensive runing all these nodes are, performance wise, a resource monitoring tool was used. The results are show on Fig.3 </p>
           <figure>
-            <img src="img/resource_monitor_full.png" alt="schematics2" style="width:70%" >
+            <img src="img/resource_monitor_full.png" alt="schematics2" style="width:100%" >
             <figcaption>Fig.3 - Resource monitoring while all needed nodes running</figcaption>
           </figure>
           <p align="justify"> In the image we can see the two python nodes (the first one is the short term path node with 0.4% total memory used and the seconde one is VO node with 6.1% total memory used), the gnn node aswell as the simple planar pc generator. On the third row of the image is displayed the cpu usage as a percentage by the user of 47.3% wich means approximatly only 50% of the cpu capabality is used. These values seem acceptable in this stage, however I was able to detect that the VO node memory usage kept climbing (currently at 6.1%) while the number of targets increases (at the time the number of targets was about 1700). This means that if the node ran indefinitly, it will eventually run out of memory, crashing the computer. This was due to the fact that the node records every single target data and keeps it in memory. This rather basic resource monitoring was essencial to realize that the code needs to be once again reviewed to correct such issues.</p>
-          
+
 
         </div>
       </div>
