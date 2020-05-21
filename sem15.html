@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <style>
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+  <title>Rui Costa - Master Thesis 2020</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Rui Costa</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://lars.mec.ua.pt/">LAR UA</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/erros.png')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Week #15 18/05 - 22/05 </h1>
+            <h2 class="subheading"> Short term path and VO nodes' optimization   </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on May 21, 2020</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p align="justify"> This week some final touches to VO node were made. To tacke the issue of the visual lag on the representation of the Collision Cones decided to alter try a few options on the representation method. I first thought that the lag was due to the update and remove functions which deleted the outdated colliding target's cones. To run these functions a list of all the target's ids was made and then iterated through to check if the respective cone was to be deleted. Since in periods of high numbers of targets this list could be up to 40 ids, I thought the delay was due to the iteration. So this time I altered the update method and added a marker lifetime of 0.5 seconds. This means that if a previous colliding target is not a risk anymore, after 0.5 seconds its cone is deleted and if it stil is the cone is remade. Since the process of remaking the markers is not very time consuming this method should be faster than the previous.</p>
+          <p align="justify">However, after reviewing the data the lag was still present. I started looking around for potential causes, and then altered the queue size of either the subscribing topic and the publisher topic. The queue size is a variable that determines how many message is to be kept in cases the code is experiencing a bottleneck, keeping in mind that ROS uses the FIFO method (First in First Out). By changing the queue size of the markers publisher the problem was still there, which meant that the delay was not due to Rviz lag. By changing the GNNs subscriber queue size to 1 the problem was gone, the Rviz was displaying the cones without any lag. Altering the queue size meant that some GNN messages were disregarded and some targets were probably missed, eventhough only the latest targets were accounted for.  </p>
+          <p align="justify">The fact that the lag issue is due to the subscribing part of code and the messages received are a list of multiple target and its information can possibly mean that the node is not keeping up the amount of information (most likely) or, ROS buffer cannot deal with such amount at that rate. Simmilar cases were found online when ROS is streaming big messages and lag occured. By "measuring" the size of the message at either end (GNN and VO) these numbers were not consistent so no conclusion was possible.</p>
+          <p align="justify">In the end the lag was gone and by visually (printing the data at 50hz) displaying the data it appears that only a few messages were discarded in cases of high target "traffic". Some quantitative measurements must be made. </p>
+          <p align="justify">Some adjustements were also made on the Short Term Path node. Since most drivers hardly keep the steering wheel exactly at 0 degrees, the representation seemed fluid, however at first the path was only displayed when the steering wheel was at a value different than 0 degrees, due to mathematical indefenitions (divided by zero) in the trignometric equations used. So I added conditional statements to still display the path while driving straigh forward.</p>
+          <p align="justify">I also added the velocity vector of the car to Rviz representation in the front of the car. However this vector, mathematically speaking, is an approximation. The velocity perceived by the car is based on the wheel turns of the driving axle, so since this axle is at the back and the all the points of the car travel at different velocities while turning it results in minor diferences. This velocity is an approximate measurement of the car's ego-motion and could possibly be used latter on to determine the targets real velocity. </p>
+          <video width="800" height="600" controls>
+            <source src="img/nfpv2.mp4" type="video/mp4">
+          </video> 
+          
+          <p align="justify">In order to use some the calculated properties I created a topic with the following information: </p>
+          <ul>
+            <li>Direction (left, right, forward)</li>
+            <li>Outer Wheel Angle</li>
+            <li>Inner Wheel Angle</li>
+            <li>Center Angle </li>
+            <li>Velocity vector (linear and angular)</li>
+            <li>Turning center point</li>
+            <li>Turning center distance</li> 
+          </ul> 
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/ruiplccosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/ruipcosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Rui Costa 2019</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+  
+
+</body>
+
+</html>
