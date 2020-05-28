@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <style>
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+  <title>Rui Costa - Master Thesis 2020</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Rui Costa</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://lars.mec.ua.pt/">LAR UA</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/erros.png')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Week #16 25/05 - 29/05 </h1>
+            <h2 class="subheading">    </h2>
+            <span class="meta">Posted by
+              <a href="#">Rui Costa</a>
+              on May 28, 2020</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p align="justify"> This week was mainly focused on writing the dissertation. At this stage of the work, only some minor adjustments are needed to code. Since the Velociy Obstacles principle used in this work only focuses on linear trajectories, the calculations are now only made when the ATLASCAR2 is not turning. To do so, the code now subscribes to the Short Term Path node to receive the direction message published by it. </p>
+          <p align="justify"> Previously, the direction was set to display left or right when the steering wheel angle was at value greater than 0 degrees. However, since most drivers don't drive that straight forward, the message now informs the direction when the angular velocity of the ATLASCAR is greater than 0.01 rad/s. </p>
+          <p align="justify"> By subscribing to the direction data the VO node now only calculates and displays the Velocity Cones when the ATLASCAR is not making a sharp turn. This eliminates the errors when the car is turning and the instant relative velocity vector informs an imminent collision. However, when another vehicle is turning the same error accurs. As of now there is not way to determine if an obstacle is turning, meaning that this erros cannot be tackled. </p>
+          <p align="justify"> The collision indication when the ATLASCAR2, or the moving obstacle, is turning does not pose a serious threat to the driver (at best it is considered defensive driving), however if this program would to be applied in a maneuver decision algorithm these false positives would cause instability. </p>
+          <p align="justify"> To better perceive the collision cone decions making, the relative velocity vector of each colliding target is now displayed in the car's base_link frame. This allows to see if the relative velocity vector lies indeed within the VO collision cone.</p>
+          <p align="justify"> Due to the prior lack of knowledge of the ATLASCAR2 odometry, the predicted collision zones were not displayed. To display this collision zones the ATLASCAR2's own velocity must be subtracted from the relative velocity vector. The GNN velocity data is known to be somewhat incorrect (as the previous studies point out), nevertheless since the Short Term Path (which also publishes the ATLASCAR2 current velocity vector) is already subscribed to, this information was used to shift the current collision circles by the obstacle's real velocity vector (relative velocity vector-ATLASCAR2 velocity vector).   </p>
+          <p align="justify"> The rosbag merge done in the previous weeks shows now even more delay, due to the computation demand of all the nodes, so all this changes are almost impossible to visualize. To account for this, next week all the code developed will be tested live on the ATLASCAR2.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/ruiplccosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/ruipcosta">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Rui Costa 2019</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/clean-blog.min.js"></script>
+  
+
+</body>
+
+</html>
