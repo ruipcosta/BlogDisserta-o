@@ -1,0 +1,76 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body {
+    overflow: hidden;
+    height: 600px;
+    background-color: bisque;
+
+}
+.cone {
+    -webkit-transform-origin: 50% 0%;
+    -moz-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+    position: absolute;
+    /* left: 743px; */
+	width: 0;
+	height: 0;
+	border-left: solid transparent;
+	border-right: solid transparent;
+    border-bottom: solid #555;
+    opacity: 0.4;
+    z-index: -9;
+}
+.line{
+    -webkit-transform-origin: 0% 50%;
+    -moz-transform-origin: 0% 50%;
+    transform-origin: 0% 50%;
+    height: 3px; /* Line width of 3 */
+    background: #000; /* Black fill */
+  }
+#txtstart{
+    text-align: center;
+    font-size: 25px;
+    margin-top: 200px ;
+    font-family: cursive;
+
+}
+#txtbeg {
+    text-align: center;
+    font-size: 25px;
+    margin-top: 200px ;
+    font-family: cursive;
+}
+.circle {
+    position: absolute;
+    top: -50px;
+    width: 50px;
+    height: 50px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background: red;
+  }
+.arrowtriangle {
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 35px solid #555;
+}
+.arrowline {
+	position: relative;
+    top: 0;
+    left:8px;
+	background: green;
+    width: 4px;
+    height: 70px;
+}
+.arrow{
+    position:absolute;
+    top:495px;
+    left: 758px;
+    transform-origin: 50% 100%;
+    -moz-transform-origin: 50% 100%;
+}
