@@ -59,25 +59,25 @@ function makeTopRand(){
     return [randTop1,randTop2,randTop3,randTop4,randTop5]
 }
 function makeWidthRand(){
-    let randWidth1 = Math.floor(Math.random() * (Math.floor(100) - Math.ceil(30) + 1)) + Math.ceil(30);
+    let randWidth1 = Math.floor(Math.random() * (Math.floor(100) - Math.ceil(58) + 1)) + Math.ceil(58);
     let randWidth2 = 3;
     let randWidth3 = 3;
     let randWidth4 = 3;
     let randWidth5 = 3;
     do {
-        randWidth2 =  Math.floor(Math.random() * (Math.floor(100) - Math.ceil(30) + 1)) + Math.ceil(30);
+        randWidth2 =  Math.floor(Math.random() * (Math.floor(100) - Math.ceil(58) + 1)) + Math.ceil(58);
     }
     while(randWidth2==randWidth1);
     do {
-        randWidth3 =  Math.floor(Math.random() * (Math.floor(100) - Math.ceil(30) + 1)) + Math.ceil(30);
+        randWidth3 =  Math.floor(Math.random() * (Math.floor(100) - Math.ceil(58) + 1)) + Math.ceil(58);
     }
     while(randWidth3==randWidth1 || randWidth3==randWidth2);
     do {
-        randWidth4 =  Math.floor(Math.random() * (Math.floor(100) - Math.ceil(30) + 1)) + Math.ceil(30);
+        randWidth4 =  Math.floor(Math.random() * (Math.floor(100) - Math.ceil(58) + 1)) + Math.ceil(58);
     }
     while(randWidth4==randWidth1 || randWidth4==randWidth2 || randWidth4==randWidth3);
     do {
-        randWidth5 =  Math.floor(Math.random() * (Math.floor(100) - Math.ceil(30) + 1)) + Math.ceil(30);
+        randWidth5 =  Math.floor(Math.random() * (Math.floor(100) - Math.ceil(58) + 1)) + Math.ceil(58);
     }
     while(randWidth5==randWidth1 || randWidth5==randWidth2 || randWidth5==randWidth3 || randWidth5==randWidth4);
 
@@ -106,7 +106,8 @@ $(function() {
 
 $(document).ready(function(){
     $("#txtbeg").hide()
-    $('.arrow').hide(); 
+    $('.arrow').hide();
+    $('img').hide(); 
     jQuery('<div/>', {
         id: '5',
         "class": 'circle',
@@ -129,7 +130,8 @@ function timer(){
     if (time==2) $('#txtbeg').fadeOut(2000);
     if (time==0){
         clearInterval(intervalId);
-        $('.arrow').show(); 
+        $('.arrow').show();
+        $('img').show(); 
         setInterval("play()", 10);
     }
     $("#txttimer").text(time);
@@ -156,9 +158,12 @@ function setup(statement){
     let randWidth = makeWidthRand();
     let randLeft = makeLeftRand();
     let randTop = makeTopRand();
+    console.log(randWidth);
     if (statement=="all"){
         for (let i=1; i<=5;i++){
             let borderRadius=randWidth[i-1]/2;
+            let borderRadiusTarget=borderRadius-26;
+            let widthTarget = randWidth[i-1]-53;
             $(`.circle#${i}`).css({
                 "top":-50-randTop[i-1],
                 "left":randLeft[i-1],
@@ -167,11 +172,43 @@ function setup(statement){
                 "-webkit-border-radius": borderRadius,
                 "-moz-border-radius": borderRadius,
                 "border-radius": borderRadius
-        });
-        
+            });
+            $(`.target#${i*10}`).css({
+                "top":-50-randTop[i-1]+borderRadius-borderRadiusTarget,
+                "left":randLeft[i-1]+borderRadius-borderRadiusTarget,
+                "width":widthTarget,
+                "height":widthTarget,
+                "-webkit-border-radius": borderRadiusTarget,
+                "-moz-border-radius": borderRadiusTarget,
+                "border-radius": borderRadiusTarget
+            });
         }
     }
-    else $(`.circle#${statement}`).css({"top":-50-randTop[statement-1],"left":randLeft[statement-1]});
+    else {
+        let borderRadius=randWidth[i-1]/2;
+        let borderRadiusTarget=borderRadius-26;
+        let widthTarget = randWidth[i-1]-53;
+        $(`.circle#${statement}`).css({
+            "top":-50-randTop[statement-1],
+            "left":randLeft[statement-1],
+            "width":randWidth[i-1],
+            "height":randWidth[i-1],
+            "-webkit-border-radius": borderRadius,
+            "-moz-border-radius": borderRadius,
+            "border-radius": borderRadius
+        
+        });
+        $(`.target#${statement*10}`).css({
+            "top":-50-randTop[i-1]+borderRadius-borderRadiusTarget,
+                "left":randLeft[i-1]+borderRadius-borderRadiusTarget,
+                "width":widthTarget,
+                "height":widthTarget,
+                "-webkit-border-radius": borderRadiusTarget,
+                "-moz-border-radius": borderRadiusTarget,
+                "border-radius": borderRadiusTarget
+        });
+    
+    }
 
     $('.circle').show();
 }
@@ -232,14 +269,23 @@ function play(){
     $(".arrow").css({'transform': 'rotate(0deg)'});
     checkPosition();
     $('.circle').css({"top":"+=1"});
-    if (movUp)  $('.circle').css({"top":"+=1"});
-    if (movDown)  $('.circle').css({"top":"-=1"});
+    $('.target').css({"top":"+=1"});
+    if (movUp)  {
+        $('.circle').css({"top":"+=1"});
+        $('.target').css({"top":"+=1"});
+    }
+    if (movDown)  {
+        $('.circle').css({"top":"-=1"});
+        $('.target').css({"top":"-=1"});
+    }
     if (movRight) {
         $('.circle').css({"left":"-=1"});
+        $('.target').css({"left":"-=1"});
         $(".arrow").css({'transform': 'rotate(45deg)'});
     }
     if (movLeft){
         $('.circle').css({"left":"+=1"})
+        $('.target').css({"left":"+=1"})
         $(".arrow").css({'transform': 'rotate(-45deg)'});
     };
 
